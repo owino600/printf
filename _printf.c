@@ -83,14 +83,29 @@ int _printf(const char *format, ...)
 }
 int print_integer(int value)
 {
-	int i;
+	int i = 0;
+	int j;
 	char buffer[32];
-	int printed = snprintf(buffer, sizeof(buffer), "%d", value);
+	int printed = 0;
 
-	for (i = 0; i < printed; i++)
+	if (value < 0)
 	{
-		putchar(buffer[i]);
+		putchar('-');
+		printed++;
+		value = -value;
 	}
+	/*convert each digit of the integer to a character*/
+	do
+	{
+		buffer[i++] = '0' + (value % 10);
+		value /= 10;
+		printed++;
+	}
+	while (value > 0);
+		for (j = i -1; j >= 0; j--)
+		{
+			putchar(buffer[j]);
+		}
 	return (printed);
 }
 void print_buffer(char buffer[], int *buff_ind)
