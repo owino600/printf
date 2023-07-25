@@ -5,8 +5,10 @@ int _printf(const char *format, ...)
 {
 	va_list args;
 	int count = 0;
+	int buff_ind = 0;
 	int ch = va_arg(args, int);
 	char *str = va_arg(args, char*);
+	char buffer[BUFF_SIZE];
 
 	va_start(args, format);
 	while (*format)
@@ -16,35 +18,55 @@ int _printf(const char *format, ...)
 			format++;
 			if (*format == '%')
 			{
-				putchar('%');
-				count++;
+				buffer[buff_ind++] = '%';
+				if (buff_ind == BUFF_SIZE)
+				{
+					print_buffer(buffer, &buff_ind);
+					count += buff_ind;
+				}
 			}
 			else if (*format == 'c')
 			{
-				putchar(ch);
-				count++;
+				buffer[buff_ind++] = ch;
+				if (buff_ind == BUFF_SIZE)
+				{
+					print_buffer(buffer, &buff_ind);
+					count += buff_ind;
+				}
 			}
 			else if (*format == 's')
 			{
 				while (*str)
 				{
-					putchar(*str);
+					buffer[buff_ind++] = *str;
 					str++;
-					count++;
+					if (buff_ind == BUFF_SIZE)
+					{
+						print_buffer(buffer, &buff_ind);
+						count += buff_ind;
+					}
+					
 				}
 			}
 			else
 			{
-				putchar(*format);
-				count++;
+				buffer[buff_ind++] = *format;
+				if (buff_ind == BUFF_SIZE)
+				{
+					print_buffer(buffer, &buff_ind);
+					count += buff_ind;
+				}
 			}
 			format++;
 		}
+		print_buffer(buffer, &buff_ind);
+		count += buff_ind;
+
 		va_end(args);
 	}
 	return (count);
 }
-int rint_int(int value)
+int print_integer(int value)
 {
 	int i;
 	char buffer[32];

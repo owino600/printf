@@ -100,7 +100,7 @@ int flags, int width, int precision, int size);
 
 int print_int(va_list types, char buffer[],
 int flags, int width, int precision, int size);
-int rint_int(int value);
+int print_integer(int value);
 
 int print_binary(va_list types, char buffer[],
 
