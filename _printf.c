@@ -1,38 +1,35 @@
 #include "main.h"
-/**
- * functions = _printf
- * description: custom _printf function that print fommarted output
- * @s: form strings and other arguments
- * @c: number of characters pointed
- * Return: the number of characters printed:wq
- */
 
 void print_buffer(char buffer[], int *buff_ind);
+/**
+ * _printf - print function
+ * @format: format
+ * by daniel ft hildah
+ * Return: printed characters
+ */
 int _printf(const char *format, ...)
 {
 	va_list args;
-	int count = 0; /*initilize a counter for the number of characters printed*/
+	int count = 0;	/*initilize a counter for the number of characters printed*/
+	int k;
 	int buff_ind = 0; /*Buffer idex*/
 	int printed = 0;
+	int flags, width, precision, size;
 	int ch = va_arg(args, int);
 	char *str = va_arg(args, char*);
 	char buffer[BUFF_SIZE];
 
 	va_start(args, format);
-	while (*format)
+	for (k = 0; format && format[k] != '\0'; k++)
 	{
-		if (*format == '%')/*check for the start of a conversion specifier*/
+		if (format[k] != '%')/*check for the start of a conversion specifier*/
 		{
-			format++;/*move to the next character after '%'*/
-			if (*format == '%')
+			buffer[buff_ind++] = format[k];
+			if (buff_ind == BUFF_SIZE)
 			{
-				buffer[buff_ind++] = '%';
-				if (buff_ind == BUFF_SIZE)
-				{
-					/*flash the buffer and print its content*/
-					print_buffer(buffer, &buff_ind);
-					count += buff_ind;
-				}
+				/*flash the buffer and print its content*/
+				print_buffer(buffer, &buff_ind);
+				count += buff_ind;
 			}
 			else if (*format == 'c')
 			{
@@ -59,18 +56,23 @@ int _printf(const char *format, ...)
 			else if (*format == 'd' || *format == 'i')
 			{
 				int value = va_arg(args, int);
+
 				printed = print_integer(value);
 				count += printed;
 			}
 		}
 		else
 		{
-			buffer[buff_ind++] = *format;
-			if (buff_ind == BUFF_SIZE)
-			{
-				print_buffer(buffer, &buff_ind);
-				count += buff_ind;
-			}
+			print_buffer(buffer,  &buff_ind);
+			flags = get_flags(format, &k);
+			width = get_width(format, &k, args);
+			precision = get_precision(format, &k, args);
+			size = get_size(format, &k);
+			++k;
+			printed = handle_print(format, &k, args, buffer, flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			count += printed;
 		}
 		format++;
 	}
@@ -102,7 +104,7 @@ int print_integer(int value)
 		printed++;
 	}
 	while (value > 0);
-		for (j = i -1; j >= 0; j--)
+		for (j = i - 1; j >= 0; j--)
 		{
 			putchar(buffer[j]);
 		}
