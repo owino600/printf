@@ -20,7 +20,7 @@
 
 
 /* SIZES */
-#ifdef __SIZEOF_LONG__
+#ifndef __SIZEOF_LONG__
 #define S_LONG__SIZEOF_LONG__
 #else
 #define S_LONG 2
@@ -35,12 +35,15 @@
 
 
 /**
- * struct fmt - Struct
+ * struct fmt - Struct op
+ * by daniel and hildah
  *
- * @fmt: The format
- * @func: The function associated
+ * @fmt: The format.
+ * @fn: The function associated.
  */
+
 struct fmt
+
 {
 
 char *fmt;
@@ -52,9 +55,9 @@ int (*fnc)(va_list, char[], int, int, int, int);
 
 
 /**
- * typedef struct format fmt_t - Struct
+ * typedef struct fmt fmt_t - Struct op
  *
- * @format: The format
+ * @fmt: The format.
  * @fm_t: The function associated.
  */
 
@@ -136,13 +139,13 @@ int flags, int width, int precision, int size);
 
 /* Funciotns to handle other specifiers */
 
-int get_flags(const char *format, int *k);
+int get_flags(const char *format, int *i);
 
-int get_width(const char *format, int *k, va_list args);
+int get_width(const char *format, int *i, va_list args);
 
-int get_precision(const char *format, int *k, va_list args);
+int get_precision(const char *format, int *i, va_list args);
 
-int get_size(const char *format, int *k);
+int get_size(const char *format, int *i);
 
 
 
@@ -202,4 +205,8 @@ long int convert_size_number(long int num, int size);
 
 long int convert_size_unsgnd(unsigned long int num, int size);
 
+
+
 #endif /* MAIN_H */
+
+
